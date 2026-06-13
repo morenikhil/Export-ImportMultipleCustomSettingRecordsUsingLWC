@@ -31,6 +31,8 @@ force-app/
     └── utils/
 ```
 
+<img width="944" height="431" alt="Export or Import Custom Setting" src="https://github.com/user-attachments/assets/0c0e0787-0070-4e5a-a2e6-df1f60e37f81" />
+
 ## How It Works
 
 ### Apex Controller (`ImportAndExportCustomSettingController`)
