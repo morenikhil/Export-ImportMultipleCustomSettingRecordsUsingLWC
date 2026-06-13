@@ -1,49 +1,63 @@
 <template>
     <template if:true={isShowSpinner}>
-       <lightning-spinner variant="brand" size="large"> </lightning-spinner>
+        <lightning-spinner variant="brand" size="large"></lightning-spinner>
     </template>
-    <lightning-card title="Export or Import Custom Setting" class="slds-p-around_medium">
-        <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="12" padding="around-small">
-            <lightning-layout multiple-rows>
-                
-                <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="4" padding="around-small">
-                    <lightning-input name="Export" class="slds-text-title_bold" data-id="toggle1" label="Export" type="toggle" onchange={handleChange} checked={checkedExport} message-toggle-active="" message-toggle-inactive=""></lightning-input>
-                </lightning-layout-item>
-                <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="4" padding="around-small">
-                    <lightning-input name="Import" class="slds-text-title_bold" data-id="toggle2" label="Import" type="toggle" onchange={handleChange} checked={checkedImport} message-toggle-active="" message-toggle-inactive=""></lightning-input>
-                </lightning-layout-item>
+    <lightning-card title="Export or Import Custom Setting">
+        <div class="slds-p-around_medium">
+            <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_medium">
+                Choose one mode, select custom settings, and then run export or import.
+            </p>
 
+            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <div class="slds-box slds-theme_default slds-p-around_small">
+                        <lightning-input name="Export" class="slds-text-title_bold" data-id="toggle1" label="Export" type="toggle" onchange={handleChange} checked={checkedExport} message-toggle-active="" message-toggle-inactive=""></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <div class="slds-box slds-theme_default slds-p-around_small">
+                        <lightning-input name="Import" class="slds-text-title_bold" data-id="toggle2" label="Import" type="toggle" onchange={handleChange} checked={checkedImport} message-toggle-active="" message-toggle-inactive=""></lightning-input>
+                    </div>
+                </div>
+            </div>
 
-                <template if:true={checkedExport}> 
-                    <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="6" padding="around-small">
-                        <lightning-dual-listbox name="languages"
-                            label="Select Custom setting for export"
-                            source-label="Available"
-                            selected-label="Selected"
-                            field-level-help="Select the custom setting for export"
-                            options={lstCustomSettingOptions}
-                            onchange={handleExportCustomSettingChange}>
-                        </lightning-dual-listbox>
-                        <br/>
+            <template if:true={checkedExport}>
+                <section class="slds-box slds-theme_shade slds-m-bottom_medium" aria-label="Export Settings">
+                    <h3 class="slds-text-title_caps slds-m-bottom_small">Export Setup</h3>
+                    <lightning-dual-listbox name="languages"
+                        label="Select Custom setting for export"
+                        source-label="Available"
+                        selected-label="Selected"
+                        field-level-help="Select the custom setting for export"
+                        options={lstCustomSettingOptions}
+                        onchange={handleExportCustomSettingChange}>
+                    </lightning-dual-listbox>
+                    <div class="slds-m-top_medium">
                         <lightning-input name="ExportSystemFieldsAsWell" class="slds-text-title_bold" data-id="toggle3" label="Export system fields as well" type="toggle" onchange={handleExportSystemFieldsAsWellChange} checked={checkedGD} message-toggle-active="" message-toggle-inactive=""></lightning-input>
-                    </lightning-layout-item>
-                </template>
+                    </div>
+                </section>
+            </template>
 
-                <template if:true={checkedImport}> 
-                    <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="6" padding="around-small">
-                        <template if:true={totalFileUploaded}>
-                            <b>Total file uploaded : {totalFileUploaded} out of this {totalSuccess} file uploaded successfully!!</b>
-                        </template>
-                        <br/>
-                        <lightning-dual-listbox name="languages"
-                            label="Select Custom setting for import"
-                            source-label="Available"
-                            selected-label="Selected"
-                            field-level-help="Select the custom setting for import"
-                            options={lstCustomSettingOptions}
-                            onchange={handleImportCustomSettingChange}>
-                        </lightning-dual-listbox>
-                        <br/>
+            <template if:true={checkedImport}>
+                <section class="slds-box slds-theme_shade" aria-label="Import Settings">
+                    <h3 class="slds-text-title_caps slds-m-bottom_small">Import Setup</h3>
+                    <template if:true={totalFileUploaded}>
+                        <div class="slds-notify slds-notify_alert slds-theme_success slds-m-bottom_medium" role="alert">
+                            <span class="slds-assistive-text">success</span>
+                            <span>Total file uploaded: {totalFileUploaded} out of this {totalSuccess} file uploaded successfully!!</span>
+                        </div>
+                    </template>
+
+                    <lightning-dual-listbox name="languages"
+                        label="Select Custom setting for import"
+                        source-label="Available"
+                        selected-label="Selected"
+                        field-level-help="Select the custom setting for import"
+                        options={lstCustomSettingOptions}
+                        onchange={handleImportCustomSettingChange}>
+                    </lightning-dual-listbox>
+
+                    <div class="slds-m-top_medium">
                         <lightning-file-upload
                             label="Attach receipt"
                             name="fileUploader"
@@ -52,26 +66,31 @@
                             multiple="true"
                             onuploadfinished={handleUploadFinished}>
                         </lightning-file-upload>
-                        <div class="slds-p-around_small slds-form-element__control slds-input-has-icon slds-input-has-icon slds-input-has-icon_left-right" role="none">
-                            <template for:each={uploadedFile} for:item="file">
-                                <span key={file.documentId} class="slds-var-p-left_x-small">
-                                    <lightning-pill label={file.name} name={file.documentId} onremove={removeRecord}>
-                                        <lightning-icon icon-name="standard:file" variant="circle"></lightning-icon>
-                                    </lightning-pill>
-                                </span>
-                            </template>
-                        </div>
-                    </lightning-layout-item>
-                </template>
+                    </div>
 
-            </lightning-layout>
-        </lightning-layout-item>
-        <template if:true={checkedExport}> 
-            <lightning-button icon-name="utility:download" variant="brand" label="Export" title="Export" slot="footer" onclick={handleExport}></lightning-button>
-        </template>
-        <template if:true={checkedImport}> 
-            <lightning-button icon-name="utility:upload" variant="brand" label="Import" title="Import" slot="footer" onclick={handleImport}></lightning-button>
-        </template>
-       <lightning-button icon-name="utility:close" variant="destructive" label="Cancel" title="Cancel" slot="footer" onclick={navigateToHome} class="slds-var-p-left_x-small"></lightning-button>
+                    <div class="slds-box slds-theme_default slds-m-top_medium slds-p-around_small" role="none">
+                        <template for:each={uploadedFile} for:item="file">
+                            <span key={file.documentId} class="slds-p-right_x-small slds-p-bottom_x-small slds-show_inline-block">
+                                <lightning-pill label={file.name} name={file.documentId} onremove={removeRecord}>
+                                    <lightning-icon icon-name="standard:file" variant="circle"></lightning-icon>
+                                </lightning-pill>
+                            </span>
+                        </template>
+                    </div>
+                </section>
+            </template>
+        </div>
+
+        <div slot="footer" class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-wrap">
+            <div class="slds-button-group" role="group">
+                <template if:true={checkedExport}>
+                    <lightning-button icon-name="utility:download" variant="brand" label="Export" title="Export" onclick={handleExport}></lightning-button>
+                </template>
+                <template if:true={checkedImport}>
+                    <lightning-button icon-name="utility:upload" variant="brand" label="Import" title="Import" onclick={handleImport}></lightning-button>
+                </template>
+            </div>
+            <lightning-button icon-name="utility:close" variant="destructive" label="Cancel" title="Cancel" onclick={navigateToHome} class="slds-m-left_small"></lightning-button>
+        </div>
     </lightning-card>
- </template>
+</template>
